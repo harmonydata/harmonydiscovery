@@ -14,6 +14,10 @@ The Weaviate server is running at `weaviate.fastdatascience.com` and `grpc.weavi
 
 The Harmony Discovery API is currently at https://harmonydiscovery.fastdatascience.com/docs
 
+The connection to the Azure VM is defined by two A records in the DNS:
+
+![arecords](docs/arecords.png)
+
 ## Architecture
 
 ### Index creation
