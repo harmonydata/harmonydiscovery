@@ -24,3 +24,27 @@ An ingest code reads the data sources, converts them to a unified structure foll
 
 Discovery API converts incoming texts to vectors using HuggingFace and then connects to Weaviate.
 
+
+
+## Example API calls
+
+```
+curl 'https://harmonydiscoveryapi.fastdatascience.com/discover/search?query=adhd&num_results=100&resource_type=study&study_design=twin'
+
+
+curl 'https://harmonydiscoveryapi.fastdatascience.com/discover/search?query=anxiety&num_results=10&return_variables_within_parent=true'
+```
+
+## Description of the API
+
+There is an optional parameter `return_variables_within_parent` which defaults to `true` .  If it is true, then all the results will be a study/dataset - if a variable is found, it is wrapped within its containing study/dataset.
+
+The main data is inside a property called `schema` which is the Schema.org Dataset schema design. So everything is compliant with schema.org.
+
+There is also pagination. You can send `&offset=10` to go from result no. 10, for example.
+
+If a study is returned more than once in the result sequence, the second time it is referred to only by its UUID, to make the response JSON smaller.
+
+The `/discover/aggregate` endpoint is added. I am not generating a histogram as Weaviate does not do that, so for numeric vars it gives me median, mean, etc. But every indexed variable is aggregated by the `aggregate` endpoint.
+
+If something like `age_lower` is set to 0, it is now not returned. So what you get from the API should all be displayable, you shouldn't need to do any cleaning.
