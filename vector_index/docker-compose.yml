@@ -1,5 +1,10 @@
-version: '3.4'
+---
+
+# This docker compose deploy a weaviate instance and enable SSL connexion in it
+# using reverse proxy approach
+# We use lets encrypt to get ssl certificates
 services:
+  # This part will deploy the database
   weaviate:
     command:
     - --host
@@ -8,10 +13,8 @@ services:
     - '8080'
     - --scheme
     - http
-    image: semitechnologies/weaviate:1.29.0
-    ports:
-    - 8080:8080
-    - 50051:50051
+    image: cr.weaviate.io/semitechnologies/weaviate:1.29.0   #Change the version of weaviate if needed
+
     volumes:
     - weaviate_data:/var/lib/weaviate
     restart: on-failure:0
@@ -20,17 +23,59 @@ services:
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
       PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
       DEFAULT_VECTORIZER_MODULE: 'none'
-      CLUSTER_HOSTNAME: 'node1'
-      #######added lines########
       AUTHENTICATION_APIKEY_ENABLED: 'true'
-      AUTHENTICATION_APIKEY_ALLOWED_KEYS: '[SET YOUR API KEYS HERE]'
-      AUTHENTICATION_APIKEY_USERS: '[SET USERNAMES HERE]'
+      # Env variables to set
+      AUTHENTICATION_APIKEY_ALLOWED_KEYS: ${AUTHENTICATION_APIKEY_ALLOWED_KEYS}
+      AUTHENTICATION_APIKEY_USERS: ${AUTHENTICATION_APIKEY_USERS}
       AUTHORIZATION_ADMINLIST_ENABLED: 'true'
-      AUTHORIZATION_ADMINLIST_USERS: '[SET USERNAMES HERE]'
-      AUTHORIZATION_ADMINLIST_READONLY_USERS: '[SET USERNAMES HERE]'
+      AUTHORIZATION_ADMINLIST_USERS: ${AUTHORIZATION_ADMINLIST_USERS}
+      AUTHORIZATION_ADMINLIST_READONLY_USERS: ${AUTHORIZATION_ADMINLIST_READONLY_USERS}
 
-  app:
-    image: python:3.10.7-alpine
+    labels:
+      - "traefik.enable=true"
+      # http
+      - "traefik.http.services.weaviate_http_service.loadbalancer.server.port=8080"
+      # Change to your company domain name
+      - "traefik.http.routers.weaviate_http_router.rule=Host(`fastdatascience.com`)" # Change to your company domain name
+      - "traefik.http.routers.weaviate_http_router.entrypoints=websecure"
+      - "traefik.http.routers.weaviate_http_router.service=weaviate_http_service"
+      - "traefik.http.routers.weaviate_http_router.tls.certresolver=myresolver"
+      # # grpc
+      - "traefik.http.services.weaviate_grpc_service.loadbalancer.server.scheme=h2c"
+      - "traefik.http.services.weaviate_grpc_service.loadbalancer.server.port=50051"
+      # Change to your company domain name, This is the second url that will be used to connect to grpc
+      - "traefik.http.routers.weaviate_grpc_router.rule=Host(`grpc.fastdatascience.com`)" # Change to your company domain name
+      - "traefik.http.routers.weaviate_grpc_router.entrypoints=grpc"
+      - "traefik.http.routers.weaviate_grpc_router.service=weaviate_grpc_service"
+      - "traefik.http.routers.weaviate_grpc_router.tls.certresolver=myresolver"
+      -
+  # Add reverse proxy to ensure to support ssl
+  traefik:
+    image: "traefik:v3.0.3"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.grpc.address=:50051"
+      - "--providers.docker"
+      - "--api"
+      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=test@gmail.com" # Change this to your email that will be used to get ssl cerrtificates from lets encrypt
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+
+    ports:
+      - "80:80"
+      - "443:443"
+      - "50051:50051"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
 volumes:
   weaviate_data:
