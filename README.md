@@ -12,21 +12,21 @@ There are also some traditional numeric and keyword based fields in the vector i
 
 The Weaviate server is running at `weaviate.fastdatascience.com` and `grpc.weaviate.fastdatascience.com` (Azure VM running on IP `20.39.218.72`). This is the vector index. At present it's hosted on Azure but in future we can move to a different hosting provider or use Weaviate Serverless. The Weaviate index is defined as a single Docker compose file under [vector_index/docker-compose.yml](vector_index/docker-compose.yml).
 
-The Harmony Discovery API is currently at https://harmonydiscovery.fastdatascience.com/docs
-
-The connection to the Azure VM is defined by two A records in the DNS:
+The Azure VM runs on an IP address and its domain/subdomain is defined by two A records in the DNS:
 
 ![arecords](docs/arecords.png)
+
+The Harmony Discovery API is currently at https://harmonydiscovery.fastdatascience.com/docs and the source code is under folder [api](api).
 
 ## Architecture
 
 ### Index creation
 
-An ingest code reads the data sources, converts them to a unified structure following the schema.org Dataset definition, and then vectorises the text fields using HuggingFace and ingests them into the Weaviate index.
+An ingest code under folder [etl_for_vector_index](etl_for_vector_index) reads the data sources, converts them to a unified structure following the schema.org Dataset definition, and then vectorises the text fields using HuggingFace and ingests them into the Weaviate index.
 
 ### Retrieval
 
-Discovery API converts incoming texts to vectors using HuggingFace and then connects to Weaviate.
+Discovery API under folder [api](api) converts incoming texts to vectors using HuggingFace and then connects to Weaviate.
 
 
 
@@ -40,6 +40,8 @@ curl 'https://harmonydiscoveryapi.fastdatascience.com/discover/search?query=anxi
 ```
 
 ## Description of the API
+
+Source code of the API is at folder [api](api).
 
 There is an optional parameter `return_variables_within_parent` which defaults to `true` .  If it is true, then all the results will be a study/dataset - if a variable is found, it is wrapped within its containing study/dataset.
 
