@@ -128,11 +128,15 @@ def clean_results_dict_and_get_schema(result_data):
     return schema
 
 
+cache = {}
+
 @router.get(
     path="/aggregate", response_model=SearchResponse, status_code=status.HTTP_200_OK, response_model_exclude_none=True,
 )
-# @cache(expire=60*24)
 def aggregate() -> SearchResponse:
+    if "aggregate" in cache:
+        return cache["aggregate"]
+
     harmony_index = get_weaviate_index()
 
     variables_to_aggregate = ["source", "resource_type", "language_codes", "keywords", "sex", "country_codes",
@@ -166,6 +170,8 @@ def aggregate() -> SearchResponse:
         aggregations[variable_to_aggregate] = this_var_aggregations
 
     agg_response = SearchResponse(num_hits=0, aggregations=aggregations)
+
+    cache["aggregate"] = agg_response
 
     return agg_response
 
