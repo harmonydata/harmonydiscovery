@@ -10,7 +10,7 @@ There are also some traditional numeric and keyword based fields in the vector i
 
 ## Where is everything?
 
-The Weaviate server is running at `weaviate.fastdatascience.com`. This is the vector index. At present it's hosted on Azure but in future we can move to a different hosting provider or use Weaviate Serverless. The Weaviate index is defined as a single Docker compose file under [vector_index/docker-compose.yml]([./vector_index/docker-compose.yml]).
+The Weaviate server is running at `weaviate.fastdatascience.com`. This is the vector index. At present it's hosted on Azure but in future we can move to a different hosting provider or use Weaviate Serverless. The Weaviate index is defined as a single Docker compose file under [vector_index/docker-compose.yml](vector_index/docker-compose.yml).
 
 The Harmony Discovery API is currently at https://harmonydiscovery.fastdatascience.com/docs
 
