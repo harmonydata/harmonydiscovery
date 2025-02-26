@@ -178,3 +178,5 @@ cython_debug/
 /ukds/resources_for_vector_index.json
 /ukllc/intermediate_output/
 /ukllc/resources_for_vector_index.json
+/all_resources_for_weaviate.json
+/merged_resources.json
