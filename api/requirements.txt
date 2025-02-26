@@ -6,4 +6,4 @@ uvicorn==0.34.0
 sentence-transformers==3.4.1
 weaviate-client==4.11.0
 huggingface-hub==0.24.6
-transformers==4.44.2
+transformers==4.49.0
