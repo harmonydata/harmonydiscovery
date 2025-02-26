@@ -1,5 +1,8 @@
 import json
 import re
+import sys
+
+sys.path.append("..")
 
 from schema import HarmonyResource, Sex, ResourceType
 from util import clean_study_design, clean_sex, get_clean_sample_size, strip_html_tags
@@ -116,7 +119,7 @@ for item, item_extra_data in ukds_data:
 
     if item_extra_data is not None and "sponsor" in item_extra_data:
         extra_data_schema["sponsor"] = [{"@type": "Organization", "name": sponsor_name} for sponsor_name in
-                                       item_extra_data["sponsor"]]
+                                        item_extra_data["sponsor"]]
 
     start_year = 0
     end_year = 0

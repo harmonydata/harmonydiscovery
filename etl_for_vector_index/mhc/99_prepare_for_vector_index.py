@@ -2,6 +2,9 @@ import hashlib
 import json
 import re
 
+import sys
+sys.path.append("..")
+
 from schema import HarmonyResource, Sex, ResourceType
 from util import numbers_regex, re_exclude, get_age_limit, get_countries, strip_html_tags, get_clean_sample_size, \
     clean_sex, clean_study_design, clean_topics, get_clean_start_year, get_clean_end_year, get_dois, \

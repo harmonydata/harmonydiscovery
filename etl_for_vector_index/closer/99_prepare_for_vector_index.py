@@ -1,5 +1,7 @@
 import json
+import sys
 
+sys.path.append("..")
 import pandas as pd
 
 from schema import HarmonyResource, Sex, ResourceType

@@ -1,6 +1,8 @@
 import re
+import sys
 from collections import Counter
 
+sys.path.append("..")
 import pandas as pd
 
 from schema import HarmonyResource, Sex, ResourceType

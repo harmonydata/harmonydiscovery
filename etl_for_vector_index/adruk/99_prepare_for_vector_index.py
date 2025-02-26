@@ -3,6 +3,9 @@ import random
 import re
 from urllib.parse import quote_plus
 
+import sys
+sys.path.append("..")
+
 from schema import HarmonyResource, Sex, ResourceType
 from util import get_countries, get_clean_start_year, get_dois, is_natural_language, \
     save_resources

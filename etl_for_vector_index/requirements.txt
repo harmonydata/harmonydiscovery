@@ -1,5 +1,4 @@
 requests
-elasticsearch
 country-named-entity-recognition
 beautifulsoup4
 pydantic
@@ -9,3 +8,4 @@ colectica-api
 openpyxl
 sqlalchemy
 psycopg2 # If you get an error, switch to psycopg2-binary
+weaviate-client

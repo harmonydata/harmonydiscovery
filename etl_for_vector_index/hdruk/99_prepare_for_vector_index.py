@@ -2,6 +2,9 @@ import hashlib
 import json
 from collections import Counter
 
+import sys
+sys.path.append("..")
+
 from schema import HarmonyResource, Sex, ResourceType
 from util import get_age_limit, get_countries, get_clean_start_year, is_natural_language, \
     save_resources, strip_html_tags

@@ -161,3 +161,20 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 /tw_env
+/adruk/intermediate_output/
+/adruk/intermediate_output/
+/adruk/resources_for_vector_index.json
+/closer/intermediate_output/
+/closer/resources_for_vector_index.json
+/cls/intermediate_output/
+/cls/resources_for_vector_index.json
+/hdruk/intermediate_output/
+/hdruk/resources_for_vector_index.json
+/matilda/Merged Survey Metadata and Survey Items Data File.xlsx
+/matilda/resources_for_vector_index.json
+/mhc/intermediate_output/
+/mhc/resources_for_vector_index.json
+/ukds/intermediate_output/
+/ukds/resources_for_vector_index.json
+/ukllc/intermediate_output/
+/ukllc/resources_for_vector_index.json
