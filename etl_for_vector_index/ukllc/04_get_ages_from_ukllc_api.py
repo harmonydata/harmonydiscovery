@@ -2,6 +2,7 @@ import json
 import os
 
 import requests
+from tqdm import tqdm
 
 # define API key
 API_KEY = os.environ['UKLLC_FASTAPI_KEY']
@@ -19,7 +20,7 @@ ages_data = {}
 # define base url
 url1 = "https://metadata-api-4a09f2833a54.herokuapp.com/dataset-ages/?"
 # for each data source / dataset pair build url and request
-for i in all_datasets:
+for i in tqdm(all_datasets):
     # format source and dataset
     source = i['source']
     dataset = i['table']
@@ -28,7 +29,6 @@ for i in all_datasets:
     url = url1 + url2
     # make request
     r = requests.get(url, headers={'access_token': API_KEY})
-    print(r.status_code)
     # convert to text
     data = r.text
     # if data found
@@ -39,8 +39,10 @@ for i in all_datasets:
         k = '_'.join([source, dataset])
         # build dict of all outputs
         ages_data[k] = pj
+    else:
+        print(f"Status code for {url} was {r.status_code}!")
 
-output_file = "intermediate_output/json.json"
+output_file = "intermediate_output/ages.json"
 
 print(f"Writing ages data to {output_file}...")
 
