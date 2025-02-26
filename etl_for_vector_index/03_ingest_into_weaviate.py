@@ -11,7 +11,7 @@ from weaviate.classes.config import ReferenceProperty
 # pip install weaviate-client
 from weaviate.classes.init import Auth
 from weaviate.connect import ConnectionParams
-
+import os
 
 def create_uuid_from_string(val: str):
     hex_string = hashlib.md5(val.encode("UTF-8")).hexdigest()
@@ -137,7 +137,7 @@ def main(file_names):
                 grpc_port=50051,
                 grpc_secure=True,
             ),
-            auth_client_secret=Auth.api_key("rnjXYPkl+27UWFDezxw="),
+            auth_client_secret=Auth.api_key(os.environ.get("HARMONY_WEAVIATE_API_KEY")),
             skip_init_checks=False
     ) as client:
         client.connect()
