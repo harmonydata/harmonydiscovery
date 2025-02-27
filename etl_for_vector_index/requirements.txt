@@ -3,7 +3,7 @@ country-named-entity-recognition
 beautifulsoup4
 pydantic
 numpy
-sentence-transformers
+sentence-transformers==3.4.1
 colectica-api
 openpyxl
 sqlalchemy
