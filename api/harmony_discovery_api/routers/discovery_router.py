@@ -298,7 +298,6 @@ def search(
             result_data = dict(top_level_response_object.properties)
             result_data["uuid"] = top_level_response_object.uuid.hex
             schema = clean_results_dict_and_get_schema(result_data)
-            print("results", result_data)
 
             parent = {}
 
