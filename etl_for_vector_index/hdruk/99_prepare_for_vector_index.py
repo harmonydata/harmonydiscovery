@@ -48,15 +48,20 @@ for item, item_extra_data_holder in hdruk_data:
                     description = ""
                 label = element["label"]
                 if label is None or type(label) is not str:
-                    label = ""
+                    label = description
 
-                all_text = description + " " + label
+                label = label.strip()
+                description = description.strip()
+
+                if label == "" and description == "":
+                    continue
+
+                all_text = " ".join({description, label})
 
                 variable = HarmonyResource(
                     age_lower=0,
                     age_upper=0,
                     all_text=all_text,
-                    # country="",
                     country_codes=[],
                     data_access="",
                     description=description,
