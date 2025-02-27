@@ -86,24 +86,34 @@ from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
-# Connect to Weaviate
-client = weaviate.WeaviateClient(
-    connection_params=ConnectionParams.from_params(
-        http_host="weaviate.fastdatascience.com",
-        http_port=443,
-        http_secure=True,
-        grpc_host="grpc.weaviate.fastdatascience.com",
-        grpc_port=50051,
-        grpc_secure=True,
-    ),
-    auth_client_secret=Auth.api_key(os.environ.get("HARMONY_WEAVIATE_API_KEY")),
-    skip_init_checks=False
-)
-client.connect()
+cache = {}
 
-print(client.is_ready())
 
-harmony_index = client.collections.get("harmony")
+def get_harmony_index():
+    if "harmony_index" in cache:
+        return cache["harmony_index"]
+    # Connect to Weaviate
+    client = weaviate.WeaviateClient(
+        connection_params=ConnectionParams.from_params(
+            http_host="weaviate.fastdatascience.com",
+            http_port=443,
+            http_secure=True,
+            grpc_host="grpc.weaviate.fastdatascience.com",
+            grpc_port=50051,
+            grpc_secure=True,
+        ),
+        auth_client_secret=Auth.api_key(os.environ.get("HARMONY_WEAVIATE_API_KEY")),
+        skip_init_checks=False
+    )
+    client.connect()
+
+    print(client.is_ready())
+
+    harmony_index = client.collections.get("harmony")
+
+    cache["harmony_index"] = harmony_index
+
+    return harmony_index
 
 
 # End connect to Weaviate
@@ -127,15 +137,14 @@ def clean_results_dict_and_get_schema(result_data):
     return schema
 
 
-cache = {}
-
-
 @router.get(
     path="/aggregate", response_model=SearchResponse, status_code=status.HTTP_200_OK, response_model_exclude_none=True,
 )
 def aggregate() -> SearchResponse:
     if "aggregate" in cache:
         return cache["aggregate"]
+
+    harmony_index = get_harmony_index()
 
     variables_to_aggregate = ["source", "resource_type", "language_codes", "keywords", "sex", "country_codes",
                               "study_design"]
@@ -200,6 +209,8 @@ def search(
         return_variables_within_parent: bool = Query(default=True)
 
 ) -> SearchResponse:
+    harmony_index = get_harmony_index()
+
     query_vector = model.encode(sentences=query, convert_to_numpy=True)[0]
 
     filters_list = []
