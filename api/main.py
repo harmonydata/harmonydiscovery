@@ -37,6 +37,8 @@ from fastapi.middleware.gzip import GZipMiddleware
 from harmony_discovery_api.core.settings import settings
 from harmony_discovery_api.routers.health_check_router import router as health_check_router
 from harmony_discovery_api.routers.discovery_router import router as discovery_router
+from harmony_discovery_api.routers.info_router import router as info_router
+
 
 description = """
 Harmony Discovery API (v2, using Weaviate instead of Elasticsearch)
@@ -72,6 +74,7 @@ app_fastapi.add_middleware(
 app_fastapi.add_middleware(GZipMiddleware)
 
 # Include routers
+app_fastapi.include_router(health_check_router, tags=["Health Check"])
 app_fastapi.include_router(health_check_router, tags=["Health Check"])
 app_fastapi.include_router(discovery_router, tags=["Discovery"])
 
