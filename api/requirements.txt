@@ -1,9 +1,7 @@
 fastapi==0.109.1
-requests==2.31.0
+requests==2.32.3
 pydantic==2.8.2
 pydantic-settings==2.4.0
 uvicorn==0.34.0
 sentence-transformers==3.4.1
 weaviate-client==4.11.0
-huggingface-hub==0.24.6
-transformers==4.49.0
