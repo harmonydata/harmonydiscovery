@@ -75,8 +75,8 @@ app_fastapi.add_middleware(GZipMiddleware)
 
 # Include routers
 app_fastapi.include_router(health_check_router, tags=["Health Check"])
-app_fastapi.include_router(health_check_router, tags=["Health Check"])
 app_fastapi.include_router(discovery_router, tags=["Discovery"])
+app_fastapi.include_router(info_router, tags=["Info"])
 
 
 async def main():
