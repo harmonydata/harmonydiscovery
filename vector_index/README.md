@@ -12,7 +12,7 @@ At present it's hosted on Azure but in future we can move to a different hosting
 
 The Azure VM runs on an IP address and its domain/subdomain is defined by two A records in the DNS:
 
-![arecords](docs/arecords.png)
+![arecords](../docs/arecords.png)
 
 ## SSL Certificate Management
 
